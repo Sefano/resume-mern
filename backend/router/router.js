@@ -9,5 +9,6 @@ router.post(
   reqValidator.registerValidator,
   userController.registration
 );
+router.post("/login", reqValidator.loginValidator, userController.login);
 
 export default router;

@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import ApiError from "../helpers/apiError.js";
 import bcrypt from "bcrypt";
+import * as tokenService from "../services/tokenService.js";
 
 export const registration = async (login, email, password) => {
   //проверка почты
@@ -21,5 +22,36 @@ export const registration = async (login, email, password) => {
   const user = new User({ login, email, password: hashedPass });
   user.save();
 
-  return user;
+  const tokens = tokenService.generateTokens({
+    id: user._id,
+    nickname: user.login,
+  });
+  await tokenService.saveToken(user._id, tokens.refreshToken);
+
+  return {
+    ...tokens,
+    user: { id: user._id, nickname: user.login },
+  };
+};
+
+export const login = async (email, password) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw ApiError.BadRequest("Неверный логин или пароль");
+  }
+  const passCheck = await bcrypt.compare(password, user.password);
+  if (!passCheck) {
+    throw ApiError.BadRequest("Неверный логин или пароль");
+  }
+  const tokens = tokenService.generateTokens({
+    id: user._id,
+    nicnkame: user.login,
+  });
+  await tokenService.saveToken(user._id, tokens.refreshToken);
+
+  return {
+    ...tokens,
+    user: { id: user._id, nickname: user.login },
+  };
 };

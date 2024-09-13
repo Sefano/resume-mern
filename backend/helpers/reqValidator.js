@@ -11,3 +11,11 @@ export const registerValidator = [
     max: 30,
   }),
 ];
+
+export const loginValidator = [
+  body("email", "Неверный формат почты").isEmail(),
+  body("password", "Пароль должен содержать от 8 до 30 символов").isLength({
+    min: 5,
+    max: 30,
+  }),
+];
