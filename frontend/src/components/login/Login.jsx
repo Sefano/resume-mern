@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import "./reg.scss";
-import { registration } from "../../api/userApi";
+import "../registration/reg.scss";
+import { login, registration } from "../../api/userApi";
 import { NavLink } from "react-router-dom";
 
 const Reg = () => {
-  const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,16 +12,8 @@ const Reg = () => {
 
   return (
     <div className="reg">
-      <div className="reg__header">Регистрация</div>
-      <input
-        value={login}
-        onChange={(e) => {
-          setLogin(e.target.value);
-        }}
-        type="text"
-        placeholder="Введите логин..."
-        className="reg__input"
-      />
+      <div className="reg__header">Вход</div>
+
       <input
         value={email}
         onChange={(e) => {
@@ -41,16 +32,17 @@ const Reg = () => {
         placeholder="Введите пароль..."
         className="reg__input"
       />
-      <NavLink className="reg__text" to="/login">
-        Войти
+      <NavLink className="reg__text" to="/registration">
+        Регистрация
       </NavLink>
+
       <button
         onClick={() => {
-          dispatch(registration(login, email, password));
+          dispatch(login(email, password));
         }}
         className="reg__btn"
       >
-        Зарегестрироваться
+        Войти
       </button>
     </div>
   );

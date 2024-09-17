@@ -40,7 +40,7 @@ export const login = async (email, password) => {
   if (!user) {
     throw ApiError.BadRequest("Неверный логин или пароль");
   }
-  const passCheck = await bcrypt.compare(password, user.password);
+  const passCheck = bcrypt.compare(password, user.password);
   if (!passCheck) {
     throw ApiError.BadRequest("Неверный логин или пароль");
   }
@@ -54,4 +54,9 @@ export const login = async (email, password) => {
     ...tokens,
     user: { id: user._id, nickname: user.login },
   };
+};
+
+export const logout = async (refreshToken) => {
+  const token = await tokenService.removeToken(refreshToken);
+  return token;
 };

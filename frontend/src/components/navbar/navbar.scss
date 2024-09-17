@@ -1,0 +1,27 @@
+.navbar {
+  background-color: #4944deb3;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  font-size: 22px;
+  justify-content: space-between;
+
+  &__login {
+    display: flex;
+  }
+  &__element {
+    margin: 0 30px;
+
+    &-link {
+      text-decoration: none;
+      color: white;
+    }
+    &-logout {
+      border: none;
+      font-size: 22px;
+      // background-color: transparent;
+      margin: 0 30px;
+      cursor: pointer;
+    }
+  }
+}

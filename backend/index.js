@@ -3,13 +3,15 @@ import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
 import router from "./router/router.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cookieParser());
 app.use(express.json());
 app.use("/api", router);
 
-const PORT = process.env.SERVER_PORT || 1803;
+const PORT = process.env.SERVER_PORT;
 
 const start = async () => {
   try {

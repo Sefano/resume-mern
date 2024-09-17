@@ -28,3 +28,16 @@ export const saveToken = async (userId, refreshToken) => {
   });
   return token;
 };
+
+export const removeToken = async (refreshToken) => {
+  const tokenData = await Token.deleteOne({ refreshToken });
+};
+
+export const validateAccessToken = (token) => {
+  try {
+    const tokenData = jwt.verify(token, process.env.JWT_ACCESS_SERCET);
+    return tokenData;
+  } catch (error) {
+    console.log(error);
+  }
+};
