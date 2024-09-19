@@ -7,6 +7,7 @@ import Main from "./components/main/Main";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchAuth } from "./api/userApi";
+import Posts from "./components/posts/Posts";
 
 function App() {
   const isAuth = useSelector((state) => state.user.isAuth);
@@ -24,6 +25,7 @@ function App() {
             <Route path="/registration" Component={Reg} />
             <Route path="/login" Component={Login} />
             <Route path="/" Component={Main} />
+            <Route path="/posts" Component={Posts} />
           </Routes>
         </div>
       </div>

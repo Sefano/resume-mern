@@ -1,0 +1,42 @@
+.popup {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: 700px;
+  height: 600px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  margin: auto;
+  background-color: #fff;
+
+  &__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  &__input {
+    margin: 20px;
+    border-radius: 5px;
+  }
+  &__file {
+    margin-top: 50px;
+  }
+  &__textarea {
+    width: 500px;
+    resize: none;
+    height: 300px;
+  }
+  &__button {
+    margin: 10px;
+    width: 200px;
+    font-size: 14px;
+    padding: 6px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    background-color: #4a42e788;
+  }
+}

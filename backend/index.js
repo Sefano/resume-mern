@@ -9,6 +9,7 @@ const app = express();
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
 app.use(express.json());
+app.use("/upload", express.static("uploads"));
 app.use("/api", router);
 
 const PORT = process.env.SERVER_PORT;

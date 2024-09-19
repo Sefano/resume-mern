@@ -1,0 +1,15 @@
+.post {
+  margin: 10px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  &__title {
+    font-weight: bold;
+    font-size: 26px;
+  }
+  &__text {
+  }
+  &__author {
+    text-align: right;
+  }
+}
