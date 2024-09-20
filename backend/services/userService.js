@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import ApiError from "../helpers/apiError.js";
 import bcrypt from "bcrypt";
 import * as tokenService from "../services/tokenService.js";
+import Token from "../models/Token.js";
 
 export const registration = async (login, email, password) => {
   //проверка почты
@@ -59,4 +60,28 @@ export const login = async (email, password) => {
 export const logout = async (refreshToken) => {
   const token = await tokenService.removeToken(refreshToken);
   return token;
+};
+
+export const refresh = async (refreshToken) => {
+  if (!refreshToken) {
+    throw ApiError.UnathorizedError();
+  }
+  const userData = tokenService.validateRefreshToken(refreshToken);
+  const dbToken = await Token.findOne({ refreshToken });
+
+  if (!userData || !dbToken) {
+    throw ApiError.UnathorizedError();
+  }
+
+  const user = await User.findOne({ _id: userData.id });
+
+  const tokens = tokenService.generateTokens({
+    id: user._id,
+    nicnkame: user.login,
+  });
+  await tokenService.saveToken(user._id, tokens.refreshToken);
+  return {
+    ...tokens,
+    user: { id: user._id, nickname: user.login },
+  };
 };

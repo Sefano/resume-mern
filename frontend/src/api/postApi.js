@@ -6,7 +6,7 @@ export const getPosts = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get("http://localhost:1803/api/posts");
-      console.log(response.data);
+      // console.log(response.data);
       dispatch(setPosts(response.data));
     } catch (error) {
       console.log(error);

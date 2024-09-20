@@ -1,6 +1,18 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #000000, $alpha: 0.75);
+  overflow: hidden;
+  overflow-y: auto;
+  transition: opacity 0.3s;
+  z-index: 100;
+}
+
 .popup {
-  border: 2px solid black;
-  border-radius: 5px;
+  border-radius: 8px;
   width: 700px;
   height: 600px;
   top: 0;
@@ -9,8 +21,18 @@
   right: 0;
   position: absolute;
   margin: auto;
+  padding: 15px;
   background-color: #fff;
-
+  &__close {
+    font-weight: bold;
+    background: none;
+    border: none;
+    font-size: 20px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+  }
   &__content {
     display: flex;
     justify-content: center;
@@ -23,11 +45,20 @@
   }
   &__file {
     margin-top: 50px;
+    display: none;
+  }
+  &__text {
+    width: 250px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
   }
   &__textarea {
     width: 500px;
     resize: none;
     height: 300px;
+    font-size: 18px;
+    padding: 5px;
   }
   &__button {
     margin: 10px;

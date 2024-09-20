@@ -4,7 +4,7 @@ import Token from "../models/Token.js";
 
 export const generateTokens = (payload) => {
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SERCET, {
-    expiresIn: "30m",
+    expiresIn: "1m",
   });
   const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SERCET, {
     expiresIn: "30d",
@@ -36,6 +36,15 @@ export const removeToken = async (refreshToken) => {
 export const validateAccessToken = (token) => {
   try {
     const tokenData = jwt.verify(token, process.env.JWT_ACCESS_SERCET);
+    return tokenData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const validateRefreshToken = (token) => {
+  try {
+    const tokenData = jwt.verify(token, process.env.JWT_REFRESH_SERCET);
     return tokenData;
   } catch (error) {
     console.log(error);

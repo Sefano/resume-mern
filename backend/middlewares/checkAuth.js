@@ -12,6 +12,11 @@ export default (req, res, next) => {
     }
 
     const decodedToken = tokenService.validateAccessToken(token);
+    if (!decodedToken) {
+      res.status(401).json({
+        message: "Ошибка авторизации",
+      });
+    }
     req.user = decodedToken;
     next();
   } catch (error) {
