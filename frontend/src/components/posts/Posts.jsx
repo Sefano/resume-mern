@@ -9,7 +9,7 @@ const Posts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
-  // const allPosts = useSelector((state) => state.posts);
+
   useEffect(() => {
     dispatch(getPosts());
   }, []);

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchAuth } from "./api/userApi";
 import Posts from "./components/posts/Posts";
+import SinglePost from "./components/singlePost/SinglePost";
 
 function App() {
   const isAuth = useSelector((state) => state.user.isAuth);
@@ -26,6 +27,7 @@ function App() {
             <Route path="/login" Component={Login} />
             <Route path="/" Component={Main} />
             <Route path="/posts" Component={Posts} />
+            <Route path="/post/:id" Component={SinglePost} />
           </Routes>
         </div>
       </div>

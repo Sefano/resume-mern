@@ -14,7 +14,7 @@
 .popup {
   border-radius: 8px;
   width: 700px;
-  height: 600px;
+  height: 750px;
   top: 0;
   bottom: 0;
   left: 0;
@@ -47,8 +47,8 @@
     margin-top: 50px;
     display: none;
   }
-  &__text {
-    width: 250px;
+  &__title {
+    width: 350px;
     height: 40px;
     font-size: 20px;
     text-align: center;
@@ -60,6 +60,18 @@
     font-size: 18px;
     padding: 5px;
   }
+  &__text {
+    width: 600px;
+    div.CodeMirror-wrap {
+      // overflow-y: scroll;
+      height: 350px;
+    }
+
+    span {
+      background-color: #fff;
+      background: none;
+    }
+  }
   &__button {
     margin: 10px;
     width: 200px;
@@ -70,4 +82,7 @@
     border: none;
     background-color: #4a42e788;
   }
+}
+.edit {
+  margin: 20px;
 }

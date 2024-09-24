@@ -1,5 +1,7 @@
 import React from "react";
 import "./post.scss";
+import ReactMarkdown from "react-markdown";
+import { NavLink } from "react-router-dom";
 
 const Post = ({ post }) => {
   return (
@@ -9,8 +11,12 @@ const Post = ({ post }) => {
           <img src={`http://localhost:1803/${post.image}`} alt="" />
         )}
       </div>
-      <div className="post__title">{post.title}</div>
-      <div className="post__text">{post.text}</div>
+      <NavLink className="post__title" to={`/post/${post._id}`}>
+        {post.title}
+      </NavLink>
+      <p className="post__divider"></p>
+      <ReactMarkdown children={post.text} className="post__text" />
+      {/* <div className="post__text">{post.text}</div> */}
       <div className="post__author">{post.author.login}</div>
     </div>
   );

@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import "./createPost.scss";
 import { useDispatch } from "react-redux";
-
 import { createPost, getPosts, uploadPostImage } from "../../api/postApi";
+import SimpleMDE from "react-simplemde-editor";
+import "./easymdeStyles.css";
+import TextField from "@mui/material/TextField";
 
 const CreatePost = ({ isOpen, onClose }) => {
   const [imageUrl, setImageUrl] = useState("");
@@ -36,6 +38,12 @@ const CreatePost = ({ isOpen, onClose }) => {
       onClose();
     }
   };
+
+  const onTextAreaChange = useCallback((value) => {
+    setText(value);
+    console.log(text);
+  }, []);
+
   return (
     <>
       {isOpen && (
@@ -51,6 +59,7 @@ const CreatePost = ({ isOpen, onClose }) => {
               >
                 Загрузить изображение
               </button>
+
               <input
                 ref={inputImageRef}
                 type="file"
@@ -59,19 +68,21 @@ const CreatePost = ({ isOpen, onClose }) => {
               />
               <input
                 type="text"
-                className="popup__input popup__text"
+                autoFocus={true}
+                className="popup__input popup__title"
                 placeholder="Заголовок"
                 maxLength={100}
                 onChange={(e) => setTitle(e.target.value)}
               />
 
-              <textarea
-                name=""
-                id=""
-                className="popup__textarea popup__input"
-                onChange={(e) => setText(e.target.value)}
-                maxLength={5000}
-              ></textarea>
+              <div className="edit">
+                <SimpleMDE
+                  onChange={onTextAreaChange}
+                  value={text}
+                  className="popup__text"
+                />
+              </div>
+
               <button className="popup__button" onClick={() => addPost()}>
                 Опубликовать
               </button>

@@ -14,6 +14,9 @@ const Navbar = () => {
         <NavLink className="navbar__element-link" to="/">
           Главная
         </NavLink>
+        <NavLink className="navbar__element-link" to="/posts">
+          Блог
+        </NavLink>
       </div>
       {isAuth && (
         <div className="navbar__login">

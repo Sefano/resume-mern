@@ -1,6 +1,6 @@
 import axios from "axios";
 import api from "../axios/axios";
-import { addPost, setPosts } from "../redux/reducers/postReducer";
+import { addPost, setPosts, singlePost } from "../redux/reducers/postReducer";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -36,6 +36,17 @@ export const uploadPostImage = (formData) => {
       const response = await api.post("/upload", formData);
       console.log("Изображение загружено");
       return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getSinglePost = (id) => {
+  return async () => {
+    try {
+      const response = await axios.get(`http://localhost:1803/api/post/${id}`);
+      return response.data;
     } catch (error) {
       console.log(error);
     }

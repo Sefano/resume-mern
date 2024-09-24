@@ -32,3 +32,13 @@ export const getPosts = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await postService.getPost(postId);
+    return res.json(post);
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -21,7 +21,9 @@ router.get("/refresh", userController.refresh);
 
 router.post("/posts", checkAuth, postController.createPost);
 router.patch("/posts/:id", checkAuth, postController.editPost);
+
 router.get("/posts", postController.getPosts);
+router.get("/post/:id", postController.getPost);
 
 router.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   try {

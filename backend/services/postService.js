@@ -44,3 +44,11 @@ export const getPosts = async () => {
 
   return posts;
 };
+
+export const getPost = async (postId) => {
+  const post = await Post.findOne({ _id: postId })
+    .populate("author", "login")
+    .exec();
+
+  return post;
+};
