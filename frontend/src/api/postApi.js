@@ -31,7 +31,7 @@ export const createPost = (image, title, text) => {
 };
 
 export const uploadPostImage = (formData) => {
-  return async (dispatch) => {
+  return async () => {
     try {
       const response = await api.post("/upload", formData);
       console.log("Изображение загружено");
@@ -47,6 +47,21 @@ export const getSinglePost = (id) => {
     try {
       const response = await axios.get(`http://localhost:1803/api/post/${id}`);
       return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const editPost = ({ id, image, title, text }) => {
+  return async () => {
+    try {
+      const response = await api.patch(`/post/${id}`, {
+        title,
+        text,
+        image,
+      });
+      console.log("Пост успешно отредактирован");
     } catch (error) {
       console.log(error);
     }

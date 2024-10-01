@@ -4,11 +4,20 @@ import Post from "./post/Post";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../api/postApi";
 import CreatePost from "../createPost/CreatePost";
+import EditPost from "../editPost/EditPost";
 
 const Posts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
+
+  //Отключаем скролл при открытии модального окна
+  if (isModalOpen) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
 
   useEffect(() => {
     dispatch(getPosts());

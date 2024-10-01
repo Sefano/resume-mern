@@ -1,15 +1,32 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import "./createPost.scss";
 import { useDispatch } from "react-redux";
-import { createPost, getPosts, uploadPostImage } from "../../api/postApi";
+import {
+  createPost,
+  editPost,
+  getPosts,
+  uploadPostImage,
+} from "../../api/postApi";
 import SimpleMDE from "react-simplemde-editor";
 import "./easymdeStyles.css";
-import TextField from "@mui/material/TextField";
 
-const CreatePost = ({ isOpen, onClose }) => {
+const EditPost = ({ isOpen, onClose, post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    setTitle(post.title);
+    setText(post.text);
+    setImageUrl(post.image);
+    console.log(post.image);
+  }, [isOpen]);
 
   const dispatch = useDispatch();
 
@@ -21,16 +38,16 @@ const CreatePost = ({ isOpen, onClose }) => {
       const file = e.target.files[0];
       formData.append("image", file);
       const response = await dispatch(uploadPostImage(formData));
-
+      console.log(response.data.url);
       setImageUrl(response.data.url);
-      console.log(imageUrl);
+      console.log(`dasdasdasdadssdaasd ${imageUrl}`);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const addPost = () => {
-    dispatch(createPost(imageUrl, title, text));
+  const editPostHandler = () => {
+    dispatch(editPost({ id: post._id, image: imageUrl, title, text }));
     onClose();
   };
 
@@ -77,6 +94,7 @@ const CreatePost = ({ isOpen, onClose }) => {
                 placeholder="Заголовок"
                 maxLength={100}
                 onChange={(e) => setTitle(e.target.value)}
+                defaultValue={post.title}
               />
 
               <div className="edit">
@@ -87,7 +105,10 @@ const CreatePost = ({ isOpen, onClose }) => {
                 />
               </div>
 
-              <button className="popup__button" onClick={() => addPost()}>
+              <button
+                className="popup__button"
+                onClick={() => editPostHandler()}
+              >
                 Опубликовать
               </button>
             </div>
@@ -98,4 +119,4 @@ const CreatePost = ({ isOpen, onClose }) => {
   );
 };
 
-export default CreatePost;
+export default EditPost;

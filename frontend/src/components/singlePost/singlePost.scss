@@ -3,13 +3,16 @@
     margin-top: 30px;
     background-color: white;
     border-radius: 10px;
-    width: 800px;
+    width: 900px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 20px;
   }
   &__image {
+    img {
+      max-width: 826px;
+    }
     margin: 20px;
     text-align: center;
   }
@@ -20,5 +23,11 @@
   &__text {
     font-size: 18px;
     list-style-position: inside;
+    overflow-wrap: break-word;
+  }
+  &__bar {
+    display: flex;
+    vertical-align: middle;
+    justify-content: space-between;
   }
 }
