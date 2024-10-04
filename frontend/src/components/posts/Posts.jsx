@@ -11,7 +11,7 @@ const Posts = () => {
 
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
-
+  const loader = useSelector((state) => state.loader.loader);
   //Отключаем скролл при открытии модального окна
   if (isModalOpen) {
     document.body.style.overflow = "hidden";
@@ -22,6 +22,14 @@ const Posts = () => {
   useEffect(() => {
     dispatch(getPosts());
   }, []);
+
+  if (loader) {
+    return (
+      <div className="loader">
+        <div className="lds-dual-ring"></div>
+      </div>
+    );
+  }
   return (
     <div className="posts">
       <div className="posts__navbar">

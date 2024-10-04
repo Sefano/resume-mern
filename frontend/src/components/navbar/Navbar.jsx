@@ -18,6 +18,7 @@ const Navbar = () => {
           Блог
         </NavLink>
       </div>
+
       {isAuth && (
         <div className="navbar__login">
           <button

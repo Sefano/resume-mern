@@ -70,3 +70,17 @@ export const fetchAuth = () => {
     }
   };
 };
+
+// export const fetchProfile = (id) => {
+//   return async () => {
+//     try {
+//       if (!localStorage.getItem("token")) {
+//         return;
+//       }
+//       const response = await api.get(`/profile/${id}`);
+//       console.log(response.data);
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };

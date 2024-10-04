@@ -17,6 +17,8 @@ router.post("/logout", userController.logout);
 
 router.get("/auth", checkAuth, userController.auth);
 
+router.get("/profile/:id", checkAuth, userController.getProfile);
+
 router.get("/refresh", userController.refresh);
 
 router.post("/posts", checkAuth, postController.createPost);

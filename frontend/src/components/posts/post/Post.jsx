@@ -6,10 +6,11 @@ import { useSelector } from "react-redux";
 import edit from "../../../icons/edit.svg";
 
 const Post = ({ post }) => {
-  const currentUser = useSelector((state) => state.user.currentUser);
-
   return (
     <div className="post">
+      <NavLink className="post__author" to={`/profile/${post.author._id}`}>
+        {post.author.login}
+      </NavLink>
       <div className="post__image">
         {post.image && (
           <img src={`http://localhost:1803/${post.image}`} alt="" />
@@ -22,12 +23,9 @@ const Post = ({ post }) => {
       <ReactMarkdown children={post.text} className="post__text" />
       {/* <div className="post__text">{post.text}</div> */}
       <div className="post__bar">
-        <div className="post__edit">
-          {currentUser.id === post.author._id && (
-            <img className="post__edit-icon" src={edit} alt="edit" />
-          )}
-        </div>
-        <div className="post__author">{post.author.login}</div>
+        {/* <NavLink className="post__author" to={`/profile/${post.author._id}`}>
+          {post.author.login}
+        </NavLink> */}
       </div>
     </div>
   );

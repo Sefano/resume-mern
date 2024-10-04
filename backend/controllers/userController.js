@@ -90,3 +90,15 @@ export const refresh = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getProfile = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const userInfo = await userService.getProfile(id);
+
+    return res.json(userInfo);
+  } catch (error) {
+    console.log(error);
+  }
+};

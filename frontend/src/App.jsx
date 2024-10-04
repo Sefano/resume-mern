@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { fetchAuth } from "./api/userApi";
 import Posts from "./components/posts/Posts";
 import SinglePost from "./components/singlePost/SinglePost";
+import Profile from "./components/profile/Profile";
 
 function App() {
   const isAuth = useSelector((state) => state.user.isAuth);
@@ -25,6 +26,7 @@ function App() {
           <Routes>
             <Route path="/registration" Component={Reg} />
             <Route path="/login" Component={Login} />
+            <Route path="/profile/:id" Component={Profile} />
             <Route path="/" Component={Main} />
             <Route path="/posts" Component={Posts} />
             <Route path="/post/:id" Component={SinglePost} />

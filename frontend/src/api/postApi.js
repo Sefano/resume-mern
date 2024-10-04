@@ -1,15 +1,19 @@
 import axios from "axios";
 import api from "../axios/axios";
 import { addPost, setPosts, singlePost } from "../redux/reducers/postReducer";
+import { hideLoader, showLoader } from "../redux/reducers/loaderReducer";
 
 export const getPosts = () => {
   return async (dispatch) => {
     try {
+      dispatch(showLoader());
       const response = await axios.get("http://localhost:1803/api/posts");
       // console.log(response.data);
       dispatch(setPosts(response.data));
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(hideLoader());
     }
   };
 };
@@ -43,12 +47,15 @@ export const uploadPostImage = (formData) => {
 };
 
 export const getSinglePost = (id) => {
-  return async () => {
+  return async (dispatch) => {
     try {
+      dispatch(showLoader());
       const response = await axios.get(`http://localhost:1803/api/post/${id}`);
       return response.data;
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(hideLoader());
     }
   };
 };

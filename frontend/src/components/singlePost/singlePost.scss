@@ -20,14 +20,24 @@
     margin-left: 15px;
     font-size: 46px;
   }
+  &__author {
+    text-decoration: none;
+    color: black;
+  }
   &__text {
     font-size: 18px;
     list-style-position: inside;
     overflow-wrap: break-word;
   }
-  &__bar {
+  &__info-bar {
     display: flex;
-    vertical-align: middle;
     justify-content: space-between;
+    align-items: center;
+    img {
+      vertical-align: middle;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+    }
   }
 }

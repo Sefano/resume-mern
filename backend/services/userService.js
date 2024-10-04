@@ -3,6 +3,7 @@ import ApiError from "../helpers/apiError.js";
 import bcrypt from "bcrypt";
 import * as tokenService from "../services/tokenService.js";
 import Token from "../models/Token.js";
+import Post from "../models/Post.js";
 
 export const registration = async (login, email, password) => {
   //проверка почты
@@ -84,4 +85,11 @@ export const refresh = async (refreshToken) => {
     ...tokens,
     user: { id: user._id, nickname: user.login },
   };
+};
+
+export const getProfile = async (id) => {
+  const user = await User.findOne({ _id: id });
+  const posts = await Post.find({ author: id });
+
+  return { user, posts: posts };
 };
