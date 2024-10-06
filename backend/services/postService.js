@@ -1,5 +1,8 @@
 import ApiError from "../helpers/apiError.js";
 import Post from "../models/Post.js";
+import User from "../models/User.js";
+import * as userService from "../services/userService.js";
+import * as tokenService from "../services/tokenService.js";
 
 export const createPost = async (title, text, image, author) => {
   const post = new Post({
@@ -51,4 +54,50 @@ export const getPost = async (postId) => {
     .exec();
 
   return post;
+};
+
+export const likePost = async (postId, token) => {
+  if (!token) {
+    throw ApiError.UnathorizedError();
+  }
+
+  const userData = await tokenService.validateAccessToken(token);
+
+  if (!userData) {
+    throw ApiError.UnathorizedError();
+  }
+
+  // const likedPosts = await User.findOne({ _id: userData.id }).select(
+  //   "likedPosts -_id"
+  // );
+
+  // return likedPosts.likedPosts;
+
+  const user = await User.findOne({ _id: userData.id });
+
+  const likedPosts = user.likedPosts;
+
+  if (!likedPosts.includes(`${postId}`)) {
+    const post = await Post.findOne({ _id: postId });
+
+    await post.updateOne({
+      likes: (post.likes += 1),
+    });
+
+    await user.updateOne({ likedPosts: [...likedPosts, post._id] });
+  } else {
+    const post = await Post.findOne({ _id: postId });
+
+    await post.updateOne({
+      likes: (post.likes -= 1),
+    });
+
+    await user.updateOne({
+      likedPosts: user.likedPosts.filter((item) => {
+        item != post.id;
+      }),
+    });
+  }
+
+  return likedPosts;
 };

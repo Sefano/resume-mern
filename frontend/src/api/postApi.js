@@ -74,3 +74,14 @@ export const editPost = ({ id, image, title, text }) => {
     }
   };
 };
+
+export const fetchLike = (id) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.patch(`/like/${id}`);
+      console.log("Сработало!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

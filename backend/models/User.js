@@ -5,6 +5,7 @@ const User = new Schema({
   email: { type: String, reqiried: true, unique: true },
   password: { type: String, require: true },
   avatar: { type: String },
+  likedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });
 
 export default model("User", User);

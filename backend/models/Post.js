@@ -6,6 +6,7 @@ const Post = new Schema({
   image: { type: String },
   author: { type: Schema.Types.ObjectId, ref: "User" },
   views: { type: Number, default: 0 },
+  likes: { type: Number, default: 0 },
 });
 
 export default model("Post", Post);

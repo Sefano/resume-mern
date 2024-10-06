@@ -38,4 +38,6 @@ router.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   }
 });
 
+router.patch("/like/:id", checkAuth, postController.likePost);
+
 export default router;
