@@ -54,7 +54,7 @@ export const login = async (email, password) => {
 
   return {
     ...tokens,
-    user: { id: user._id, nickname: user.login },
+    user: { id: user._id, nickname: user.login, likedPosts: user.likedPosts },
   };
 };
 
@@ -83,7 +83,7 @@ export const refresh = async (refreshToken) => {
   await tokenService.saveToken(user._id, tokens.refreshToken);
   return {
     ...tokens,
-    user: { id: user._id, nickname: user.login },
+    user: { id: user._id, nickname: user.login, likedPosts: user.likedPosts },
   };
 };
 

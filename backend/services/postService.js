@@ -67,12 +67,6 @@ export const likePost = async (postId, token) => {
     throw ApiError.UnathorizedError();
   }
 
-  // const likedPosts = await User.findOne({ _id: userData.id }).select(
-  //   "likedPosts -_id"
-  // );
-
-  // return likedPosts.likedPosts;
-
   const user = await User.findOne({ _id: userData.id });
 
   const likedPosts = user.likedPosts;
@@ -82,6 +76,7 @@ export const likePost = async (postId, token) => {
 
     await post.updateOne({
       likes: (post.likes += 1),
+      likedBy: [...post.likedBy, user._id],
     });
 
     await user.updateOne({ likedPosts: [...likedPosts, post._id] });
@@ -90,11 +85,14 @@ export const likePost = async (postId, token) => {
 
     await post.updateOne({
       likes: (post.likes -= 1),
+      likedBy: post.likedBy.filter((item) => {
+        item != user._id;
+      }),
     });
 
     await user.updateOne({
       likedPosts: user.likedPosts.filter((item) => {
-        item != post.id;
+        item != post._id;
       }),
     });
   }

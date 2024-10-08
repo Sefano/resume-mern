@@ -54,4 +54,8 @@
       }
     }
   }
+  &__like-red {
+    filter: invert(21%) sepia(84%) saturate(7499%) hue-rotate(357deg)
+      brightness(100%) contrast(113%);
+  }
 }

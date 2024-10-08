@@ -70,6 +70,7 @@ export const auth = async (req, res) => {
         id: user._id,
         login: user.login,
         email: user.email,
+        likedPosts: user.likedPosts,
       },
     });
   } catch (error) {

@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import "./post.scss";
+import like from "../../../icons/like.svg";
 import ReactMarkdown from "react-markdown";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import edit from "../../../icons/edit.svg";
 import { fetchLike } from "../../../api/postApi";
+import api from "../../../axios/axios";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser);
 
   return (
     <div className="post">
@@ -27,13 +30,18 @@ const Post = ({ post }) => {
       {/* <div className="post__text">{post.text}</div> */}
       <div className="post__bar">
         <div>{post.likes}</div>
-        <button
+        <div
           onClick={() => {
             dispatch(fetchLike(post._id));
           }}
         >
-          like
-        </button>
+          <img
+            className={post.likedBy.includes(user.id) ? "post__like-red" : ""}
+            src={like}
+            alt="like"
+          />
+        </div>
+
         {/* <NavLink className="post__author" to={`/profile/${post.author._id}`}>
           {post.author.login}
         </NavLink> */}

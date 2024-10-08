@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../api/postApi";
 import CreatePost from "../createPost/CreatePost";
 import EditPost from "../editPost/EditPost";
+import api from "../../axios/axios";
+import { fetchProfile } from "../../api/userApi";
 
 const Posts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [likedArray, setLikedArray] = useState([]);
 
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const loader = useSelector((state) => state.loader.loader);
+
   //Отключаем скролл при открытии модального окна
   if (isModalOpen) {
     document.body.style.overflow = "hidden";

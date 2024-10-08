@@ -16,6 +16,7 @@ const SinglePost = () => {
   const [post, setPost] = useState({});
 
   const loader = useSelector((state) => state.loader.loader);
+  const user = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     dispatch(showLoader());
@@ -51,14 +52,26 @@ const SinglePost = () => {
         <ReactMarkdown children={post.text} className="singlePost__text" />
         <hr />
         <div className="singlePost__info-bar">
-          <div
+          {post.author && user.id === post.author._id ? (
+            <div
+              className="singlePost__edit"
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            >
+              <img src={editIcon} alt="editIcon" />
+            </div>
+          ) : (
+            <></>
+          )}
+          {/* <div
             className="singlePost__edit"
             onClick={() => {
               setIsModalOpen(true);
             }}
           >
             <img src={editIcon} alt="editIcon" />
-          </div>
+          </div> */}
           <NavLink
             className="singlePost__author"
             to={`/profile/${post.author && post.author._id}`}
