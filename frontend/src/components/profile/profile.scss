@@ -16,4 +16,19 @@
     font-size: 46px;
     font-weight: bold;
   }
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    button {
+      margin: 10px;
+      width: 200px;
+      font-size: 14px;
+      padding: 6px;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      background-color: #4a42e788;
+    }
+  }
 }

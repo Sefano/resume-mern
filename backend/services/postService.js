@@ -56,6 +56,14 @@ export const getPost = async (postId) => {
   return post;
 };
 
+export const getLiked = async (userId) => {
+  const liked = await User.find({ _id: userId })
+    .populate("likedPosts")
+    .select("likedPosts -_id");
+
+  return liked;
+};
+
 export const likePost = async (postId, token) => {
   if (!token) {
     throw ApiError.UnathorizedError();

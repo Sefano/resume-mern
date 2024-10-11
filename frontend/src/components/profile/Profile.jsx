@@ -15,29 +15,47 @@ const Profile = () => {
   const { id } = useParams();
 
   const [info, setInfo] = useState({});
+  const [tab, setTab] = useState("posts");
+  const [liked, setLiked] = useState([]);
 
   const posts = useSelector((state) => state.posts.posts);
   const loader = useSelector((state) => state.loader.loader);
 
   useEffect(() => {
-    dispatch(showLoader());
-    if (!localStorage.getItem("token")) {
-      return;
+    if (tab === "posts") {
+      dispatch(showLoader());
+      if (!localStorage.getItem("token")) {
+        return;
+      }
+      api
+        .get(`/profile/${id}`)
+        .then((res) => {
+          setInfo(res.data);
+          dispatch(setPosts(res.data.posts));
+          console.log(res.data);
+        })
+        .catch((error) => {
+          alert("Не удалось получить информацию о профиле");
+        })
+        .finally(() => {
+          dispatch(hideLoader());
+        });
     }
-    api
-      .get(`/profile/${id}`)
-      .then((res) => {
-        setInfo(res.data);
-        dispatch(setPosts(res.data.posts));
-        console.log(res.data);
-      })
-      .catch((error) => {
-        alert("Не удалось получить информацию о профиле");
-      })
-      .finally(() => {
-        dispatch(hideLoader());
-      });
-  }, []);
+    if (tab === "likes") {
+      if (!localStorage.getItem("token")) {
+        return;
+      }
+      api
+        .get(`/post/${id}/likes`)
+        .then((res) => {
+          setLiked(res.data[0].likedPosts);
+          console.log(res.data[0].likedPosts);
+        })
+        .catch((error) => {
+          alert("Не удалось получить информацию о профиле");
+        });
+    }
+  }, [tab]);
 
   if (loader) {
     return (
@@ -55,12 +73,27 @@ const Profile = () => {
         </div>
         <div className="profile__name">{info.user && info.user.login}</div>
       </div>
-      <hr />
-      <div className="profile__posts">
-        {posts.map((post) => (
-          <Post key={post._id} post={post} />
-        ))}
+      <div className="profile__bar">
+        <button onClick={() => setTab("posts")}>Посты</button>
+        <button onClick={() => setTab("likes")}>Понравившиеся</button>
       </div>
+      <hr />
+      {tab === "posts" && (
+        <div className="profile__posts">
+          {posts.map((post) => (
+            <Post key={post._id} post={post} />
+          ))}
+        </div>
+      )}
+      {tab === "likes" && (
+        <div className="profile__posts">
+          <div>
+            {liked.map((post) => (
+              <Post key={post._id} post={post} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

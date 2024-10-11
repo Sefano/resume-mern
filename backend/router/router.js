@@ -26,6 +26,7 @@ router.patch("/post/:id", checkAuth, postController.editPost);
 
 router.get("/posts", postController.getPosts);
 router.get("/post/:id", postController.getPost);
+router.get("/post/:id/likes", checkAuth, postController.getLiked);
 
 router.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   try {

@@ -33,6 +33,16 @@ export const getPosts = async (req, res) => {
   }
 };
 
+export const getLiked = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const posts = await postService.getLiked(userId);
+    return res.json(posts);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getPost = async (req, res) => {
   try {
     const postId = req.params.id;
