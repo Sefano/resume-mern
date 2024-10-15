@@ -8,6 +8,8 @@ const Post = new Schema({
   views: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },
   likedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  reposts: { type: Number, default: 0 },
+  repostedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 export default model("Post", Post);

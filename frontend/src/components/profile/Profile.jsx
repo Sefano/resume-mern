@@ -17,13 +17,32 @@ const Profile = () => {
   const [info, setInfo] = useState({});
   const [tab, setTab] = useState("posts");
   const [liked, setLiked] = useState([]);
+  const [reposted, setReposted] = useState([]);
 
   const posts = useSelector((state) => state.posts.posts);
   const loader = useSelector((state) => state.loader.loader);
 
+  //эффект для первичного рендера
+  useEffect(() => {
+    dispatch(showLoader());
+    api
+      .get(`/profile/${id}`)
+      .then((res) => {
+        setInfo(res.data);
+        dispatch(setPosts(res.data.posts));
+        console.log(res.data);
+      })
+      .catch((error) => {
+        alert("Не удалось получить информацию о профиле");
+      })
+      .finally(() => {
+        dispatch(hideLoader());
+      });
+  }, []);
+
+  //эффект для рендера вкладок
   useEffect(() => {
     if (tab === "posts") {
-      dispatch(showLoader());
       if (!localStorage.getItem("token")) {
         return;
       }
@@ -36,9 +55,6 @@ const Profile = () => {
         })
         .catch((error) => {
           alert("Не удалось получить информацию о профиле");
-        })
-        .finally(() => {
-          dispatch(hideLoader());
         });
     }
     if (tab === "likes") {
@@ -50,6 +66,20 @@ const Profile = () => {
         .then((res) => {
           setLiked(res.data[0].likedPosts);
           console.log(res.data[0].likedPosts);
+        })
+        .catch((error) => {
+          alert("Не удалось получить информацию о профиле");
+        });
+    }
+    if (tab === "reposts") {
+      if (!localStorage.getItem("token")) {
+        return;
+      }
+      api
+        .get(`/post/${id}/reposts`)
+        .then((res) => {
+          setReposted(res.data[0].repostedPosts);
+          console.log(res.data[0].repostedPosts);
         })
         .catch((error) => {
           alert("Не удалось получить информацию о профиле");
@@ -75,6 +105,7 @@ const Profile = () => {
       </div>
       <div className="profile__bar">
         <button onClick={() => setTab("posts")}>Посты</button>
+        <button onClick={() => setTab("reposts")}>Репосты</button>
         <button onClick={() => setTab("likes")}>Понравившиеся</button>
       </div>
       <hr />
@@ -89,6 +120,15 @@ const Profile = () => {
         <div className="profile__posts">
           <div>
             {liked.map((post) => (
+              <Post key={post._id} post={post} />
+            ))}
+          </div>
+        </div>
+      )}
+      {tab === "reposts" && (
+        <div className="profile__posts">
+          <div>
+            {reposted.map((post) => (
               <Post key={post._id} post={post} />
             ))}
           </div>

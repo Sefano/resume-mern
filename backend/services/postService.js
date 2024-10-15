@@ -64,6 +64,14 @@ export const getLiked = async (userId) => {
   return liked;
 };
 
+export const getReposted = async (userId) => {
+  const liked = await User.find({ _id: userId })
+    .populate("repostedPosts")
+    .select("repostedPosts -_id");
+
+  return liked;
+};
+
 export const likePost = async (postId, token) => {
   if (!token) {
     throw ApiError.UnathorizedError();
@@ -106,4 +114,50 @@ export const likePost = async (postId, token) => {
   }
 
   return likedPosts;
+};
+
+export const repostPost = async (postId, token, text) => {
+  if (!token) {
+    throw ApiError.UnathorizedError();
+  }
+
+  const userData = await tokenService.validateAccessToken(token);
+
+  if (!userData) {
+    throw ApiError.UnathorizedError();
+  }
+
+  const user = await User.findOne({ _id: userData.id });
+
+  const repostedPosts = user.repostedPosts;
+
+  if (!repostedPosts.some((el) => el.hello === `${postId}`)) {
+    const post = await Post.findOne({ _id: postId });
+
+    await post.updateOne({
+      reposts: (post.reposts += 1),
+      repostedBy: [...post.repostedBy, user._id],
+    });
+
+    await user.updateOne({
+      repostedPosts: [...repostedPosts, { post: post._id, text }],
+    });
+  } else {
+    const post = await Post.findOne({ _id: postId });
+
+    await post.updateOne({
+      reposts: (post.reposts -= 1),
+      repostedBy: post.repostedBy.filter((item) => {
+        item != user._id;
+      }),
+    });
+
+    await user.updateOne({
+      repostedPosts: user.repostedPosts.filter((item) => {
+        item != post._id;
+      }),
+    });
+  }
+
+  return repostedPosts;
 };

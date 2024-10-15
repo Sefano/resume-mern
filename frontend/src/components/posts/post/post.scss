@@ -36,13 +36,21 @@
   }
   &__bar {
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
     img {
       vertical-align: middle;
       width: 26px;
       height: 26px;
       cursor: pointer;
+    }
+    &-likes {
+      display: flex;
+      align-items: center;
+    }
+    &-reposts {
+      display: flex;
+      align-items: center;
     }
   }
   &__edit {

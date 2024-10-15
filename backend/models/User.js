@@ -6,6 +6,12 @@ const User = new Schema({
   password: { type: String, require: true },
   avatar: { type: String },
   likedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  repostedPosts: [
+    {
+      post: { type: Schema.Types.ObjectId, ref: "Post" },
+      text: { type: String },
+    },
+  ],
 });
 
 export default model("User", User);

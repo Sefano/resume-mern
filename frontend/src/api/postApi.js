@@ -85,3 +85,14 @@ export const fetchLike = (id) => {
     }
   };
 };
+
+export const repost = (id, text) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.patch(`/repost/${id}`, { text });
+      console.log("Репост!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

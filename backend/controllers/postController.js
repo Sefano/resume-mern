@@ -43,6 +43,16 @@ export const getLiked = async (req, res) => {
   }
 };
 
+export const getReposted = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const posts = await postService.getReposted(userId);
+    return res.json(posts);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getPost = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -60,6 +70,19 @@ export const likePost = async (req, res) => {
     const likedPosts = await postService.likePost(postId, token);
 
     return res.json(likedPosts);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const repostPost = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const postId = req.params.id;
+    const text = req.body.text;
+    const repostedPosts = await postService.repostPost(postId, token, text);
+
+    return res.json(repostedPosts);
   } catch (error) {
     console.log(error);
   }

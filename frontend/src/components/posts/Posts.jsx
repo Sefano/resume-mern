@@ -7,6 +7,7 @@ import CreatePost from "../createPost/CreatePost";
 import EditPost from "../editPost/EditPost";
 import api from "../../axios/axios";
 import { fetchProfile } from "../../api/userApi";
+import RepostModal from "../repostModal/RepostModal";
 
 const Posts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +54,7 @@ const Posts = () => {
         ))}
       </div>
       <CreatePost isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <RepostModal />
     </div>
   );
 };
