@@ -6,7 +6,28 @@
   padding: 20px 10px;
   &__image {
     margin: 20px 0px;
-    img {
+    position: relative;
+    width: 250px;
+
+    &:hover {
+      .profile__image-upload {
+        display: block;
+      }
+    }
+
+    &-upload {
+      width: 50%;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      filter: brightness(0) invert(1) opacity(80%);
+      display: none;
+    }
+
+    &-avatar {
       width: 250px;
       height: 250px;
       border-radius: 50%;
@@ -15,6 +36,15 @@
   &__name {
     font-size: 46px;
     font-weight: bold;
+  }
+  &__reposts {
+    border: 1px solid black;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 5px;
+    &-text {
+      font-size: 22px;
+    }
   }
   &__bar {
     display: flex;

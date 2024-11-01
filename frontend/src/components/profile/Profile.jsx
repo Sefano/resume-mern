@@ -1,35 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./profile.scss";
 import avatar from "./213.jpg";
+import upload from "../../icons/upload-avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../../api/userApi";
 import { useParams } from "react-router-dom";
 import api from "../../axios/axios";
 import Post from "../posts/post/Post";
-import { setPosts } from "../../redux/reducers/postReducer";
 import { hideLoader, showLoader } from "../../redux/reducers/loaderReducer";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { uploadAvatar } from "../../api/userApi";
 
 const Profile = () => {
   const dispatch = useDispatch();
 
   const { id } = useParams();
 
+  const inputAvatarRef = useRef(null);
+
+  const [likesPage, setLikesPage] = useState(1);
+  const [postsPage, setPostsPage] = useState(1);
+  const [repostPage, setRepostPage] = useState(1);
+
+  const [hasMorePosts, setHasMorePosts] = useState(true);
+  const [hasMoreReposts, setHasMoreReposts] = useState(true);
+  const [hasMoreLikes, setHasMoreLikes] = useState(true);
+
+  // const [hasMore, setHasMore] = useState(true);
+
   const [info, setInfo] = useState({});
   const [tab, setTab] = useState("posts");
   const [liked, setLiked] = useState([]);
-  const [reposted, setReposted] = useState([]);
+  const [reposts, setReposts] = useState([]);
+  const [posts, setPosts] = useState([]);
 
-  const posts = useSelector((state) => state.posts.posts);
+  // const posts = useSelector((state) => state.posts.posts);
   const loader = useSelector((state) => state.loader.loader);
 
-  //эффект для первичного рендера
+  //эффект для первичного рендера и загрузки данных профиля
   useEffect(() => {
     dispatch(showLoader());
     api
       .get(`/profile/${id}`)
       .then((res) => {
         setInfo(res.data);
-        dispatch(setPosts(res.data.posts));
         console.log(res.data);
       })
       .catch((error) => {
@@ -40,50 +53,96 @@ const Profile = () => {
       });
   }, []);
 
+  //получение постов
+  const fetchDataPosts = () => {
+    api
+      .get(`/post/${id}/posts?page=${postsPage}&limit=5`)
+      .then((response) => {
+        console.log(response);
+        if (!response.data) {
+          setHasMorePosts(false);
+          setPosts([...posts]);
+        } else {
+          setPosts([...posts, ...response.data]);
+
+          setHasMorePosts(response.data.length > 0);
+        }
+
+        setPostsPage(postsPage + 1);
+      })
+      .catch((error) => console.log(error));
+  };
+  //получение репостов
+  const fetchDataReposts = () => {
+    api
+      .get(`/post/${id}/reposts?page=${repostPage}&limit=5`)
+      .then((response) => {
+        console.log(response.data);
+        if (!response.data) {
+          setHasMoreReposts(false);
+          setReposts([...reposts]);
+        } else {
+          setReposts([...reposts, ...response.data]);
+          setHasMoreReposts(response.data.length > 0);
+        }
+
+        setRepostPage(repostPage + 1);
+      })
+      .catch((error) => console.log(error));
+  };
+  //получение лайков
+  const fetchDataLikes = () => {
+    api
+      .get(`/post/${id}/likes?page=${likesPage}&limit=5`)
+      .then((response) => {
+        console.log(response.data);
+        if (!response.data) {
+          setHasMoreLikes(false);
+          setLiked([...liked]);
+        } else {
+          setLiked([...liked, ...response.data]);
+          setHasMoreLikes(response.data.length > 0);
+        }
+
+        setLikesPage(likesPage + 1);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const nextFetch = () => {
+    if (tab === "posts") {
+      fetchDataPosts();
+    }
+    if (tab === "likes") {
+      fetchDataLikes();
+    }
+    if (tab === "reposts") {
+      fetchDataReposts();
+    }
+  };
+
   //эффект для рендера вкладок
   useEffect(() => {
     if (tab === "posts") {
       if (!localStorage.getItem("token")) {
         return;
       }
-      api
-        .get(`/profile/${id}`)
-        .then((res) => {
-          setInfo(res.data);
-          dispatch(setPosts(res.data.posts));
-          console.log(res.data);
-        })
-        .catch((error) => {
-          alert("Не удалось получить информацию о профиле");
-        });
+
+      fetchDataPosts();
     }
     if (tab === "likes") {
       if (!localStorage.getItem("token")) {
         return;
       }
-      api
-        .get(`/post/${id}/likes`)
-        .then((res) => {
-          setLiked(res.data[0].likedPosts);
-          console.log(res.data[0].likedPosts);
-        })
-        .catch((error) => {
-          alert("Не удалось получить информацию о профиле");
-        });
+
+      fetchDataLikes();
     }
     if (tab === "reposts") {
       if (!localStorage.getItem("token")) {
         return;
       }
-      api
-        .get(`/post/${id}/reposts`)
-        .then((res) => {
-          setReposted(res.data[0].repostedPosts);
-          console.log(res.data[0].repostedPosts);
-        })
-        .catch((error) => {
-          alert("Не удалось получить информацию о профиле");
-        });
+
+      fetchDataReposts();
     }
   }, [tab]);
 
@@ -95,12 +154,40 @@ const Profile = () => {
     );
   }
 
+  const handleChangeFile = async (e) => {
+    try {
+      const formData = new FormData();
+      const file = e.target.files[0];
+      formData.append("image", file);
+      const response = await dispatch(uploadAvatar(formData));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="profile">
       <div className="profile__info">
-        <div className="profile__image">
-          <img src={avatar} alt="avatar" />
+        <div
+          className="profile__image"
+          onClick={() => inputAvatarRef.current.click()}
+        >
+          <img src={upload} alt="upload" className="profile__image-upload" />
+
+          {info.user && (
+            <img
+              src={`http://localhost:1803/upload/profile-photos/${info.user.avatar}`}
+              alt="avatar"
+              className="profile__image-avatar"
+            />
+          )}
         </div>
+        <input
+          ref={inputAvatarRef}
+          type="file"
+          style={{ display: "none" }}
+          onChange={handleChangeFile}
+        />
         <div className="profile__name">{info.user && info.user.login}</div>
       </div>
       <div className="profile__bar">
@@ -110,29 +197,66 @@ const Profile = () => {
       </div>
       <hr />
       {tab === "posts" && (
-        <div className="profile__posts">
-          {posts.map((post) => (
-            <Post key={post._id} post={post} />
-          ))}
-        </div>
-      )}
-      {tab === "likes" && (
-        <div className="profile__posts">
-          <div>
-            {liked.map((post) => (
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={nextFetch}
+          hasMore={hasMorePosts}
+          loader={
+            <div className="loader">
+              <div className="lds-dual-ring"></div>
+            </div>
+          }
+        >
+          <div className="profile__posts">
+            {posts.map((post) => (
               <Post key={post._id} post={post} />
             ))}
           </div>
-        </div>
+        </InfiniteScroll>
+      )}
+
+      {tab === "likes" && (
+        <InfiniteScroll
+          dataLength={liked.length}
+          next={nextFetch}
+          hasMore={hasMoreLikes}
+          loader={
+            <div className="loader">
+              <div className="lds-dual-ring"></div>
+            </div>
+          }
+        >
+          <div className="profile__posts">
+            <div>
+              {liked.map((post) => (
+                <Post key={post._id} post={post} />
+              ))}
+            </div>
+          </div>
+        </InfiniteScroll>
       )}
       {tab === "reposts" && (
-        <div className="profile__posts">
-          <div>
-            {reposted.map((post) => (
-              <Post key={post._id} post={post} />
-            ))}
+        <InfiniteScroll
+          dataLength={reposts.length}
+          next={nextFetch}
+          hasMore={hasMoreReposts}
+          loader={
+            <div className="loader">
+              <div className="lds-dual-ring"></div>
+            </div>
+          }
+        >
+          <div className="profile__posts">
+            <div>
+              {reposts.map((post) => (
+                <div className="profile__reposts" key={post._id}>
+                  <div className="profile__reposts-text">{post.text}</div>
+                  <Post key={post._id} post={post.post} />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </InfiniteScroll>
       )}
     </div>
   );

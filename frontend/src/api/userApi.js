@@ -84,3 +84,15 @@ export const fetchProfile = (id) => {
     }
   };
 };
+
+export const uploadAvatar = (formData) => {
+  return async () => {
+    try {
+      const response = await api.post("/avatar", formData);
+      console.log("Фото профиля загружено");
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

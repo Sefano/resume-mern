@@ -18,6 +18,23 @@ export const getPosts = () => {
   };
 };
 
+export const getPostPages = (page) => {
+  return async (dispatch) => {
+    try {
+      dispatch(showLoader());
+      const response = await axios.get(
+        `http://localhost:1803/api/posts?page=${page}&limit=5`
+      );
+      // console.log(response.data);
+      dispatch(setPosts(response.data));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
+};
+
 export const createPost = (image, title, text) => {
   return async (dispatch) => {
     try {

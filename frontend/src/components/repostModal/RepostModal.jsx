@@ -30,16 +30,16 @@ const RepostModal = ({ repostModal }) => {
   return (
     <>
       {isOpen && (
-        <div className="wrapper" onClick={handleClose}>
-          <div className="popup">
-            <div className="popup__content">
-              <button className="popup__close" onClick={onClose}>
+        <div className="edit__wrapper" onClick={handleClose}>
+          <div className="edit__popup">
+            <div className="edit__popup__content">
+              <button className="edit__popup__close" onClick={onClose}>
                 X
               </button>
               <textarea
                 onChange={(e) => setText(e.target.value)}
                 name="text"
-                className="popup__text"
+                className="edit__popup__text"
                 id="text"
                 maxLength={620}
               ></textarea>
@@ -63,7 +63,7 @@ const RepostModal = ({ repostModal }) => {
               </div>
 
               <button
-                className="popup__button"
+                className="edit__popup__button"
                 onClick={() => {
                   dispatch(repost(postForRepost._id, text));
                 }}

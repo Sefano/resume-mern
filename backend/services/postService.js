@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import * as userService from "../services/userService.js";
 import * as tokenService from "../services/tokenService.js";
 
+//создание поста
 export const createPost = async (title, text, image, author) => {
   const post = new Post({
     title,
@@ -12,11 +13,16 @@ export const createPost = async (title, text, image, author) => {
     author,
   });
 
+  const user = await User.findOne({ _id: author });
+
   await post.save();
+
+  await user.updateOne({ posts: [...user.posts, post._id] });
 
   return post;
 };
 
+//редактирование поста
 export const updatePost = async (title, text, image, postId) => {
   // const post = await Post.findOne({ _id: postId });
   // if (!post) {
@@ -42,12 +48,18 @@ export const updatePost = async (title, text, image, postId) => {
   return post;
 };
 
-export const getPosts = async () => {
-  const posts = await Post.find().populate("author", "login").exec();
+//получение всех постов
+export const getPosts = async (limit, skip) => {
+  const posts = await Post.find()
+    .skip(skip)
+    .limit(limit)
+    .populate("author", "login")
+    .exec();
 
   return posts;
 };
 
+//получение одного поста по id
 export const getPost = async (postId) => {
   const post = await Post.findOne({ _id: postId })
     .populate("author", "login")
@@ -56,22 +68,65 @@ export const getPost = async (postId) => {
   return post;
 };
 
-export const getLiked = async (userId) => {
-  const liked = await User.find({ _id: userId })
-    .populate("likedPosts")
+//получить посты по id пользователя
+export const getUserPosts = async (userId, limit, skip) => {
+  const posts = await User.findOne({ _id: userId })
+
+    .populate({
+      path: "posts",
+      skip: `${skip}`,
+      limit: `${limit}`,
+
+      populate: {
+        path: "author",
+        select: "login",
+      },
+    })
+    .select("posts -_id");
+
+  return posts;
+};
+
+//получить лайкнутые посты по id пользователя
+export const getLiked = async (userId, limit, skip) => {
+  const liked = await User.findOne({ _id: userId })
+
+    .populate({
+      path: "likedPosts",
+      skip: `${skip}`,
+      limit: `${limit}`,
+      populate: {
+        path: "author",
+        select: "login",
+      },
+    })
     .select("likedPosts -_id");
 
   return liked;
 };
 
-export const getReposted = async (userId) => {
-  const liked = await User.find({ _id: userId })
-    .populate("repostedPosts")
+//получить репосты пользователя по его id
+export const getReposted = async (userId, limit, skip) => {
+  const reposted = await User.findOne({ _id: userId })
+    .populate({
+      path: `repostedPosts`,
+
+      populate: {
+        path: "post",
+        populate: {
+          path: "author",
+          select: "login",
+        },
+      },
+    })
     .select("repostedPosts -_id");
 
-  return liked;
+  reposted.repostedPosts = reposted.repostedPosts.slice(skip, skip + limit);
+
+  return reposted;
 };
 
+//лайк поста
 export const likePost = async (postId, token) => {
   if (!token) {
     throw ApiError.UnathorizedError();
@@ -116,6 +171,7 @@ export const likePost = async (postId, token) => {
   return likedPosts;
 };
 
+//репост
 export const repostPost = async (postId, token, text) => {
   if (!token) {
     throw ApiError.UnathorizedError();
@@ -140,7 +196,7 @@ export const repostPost = async (postId, token, text) => {
     });
 
     await user.updateOne({
-      repostedPosts: [...repostedPosts, { post: post._id, text }],
+      repostedPosts: [...repostedPosts, { post: postId, text }],
     });
   } else {
     const post = await Post.findOne({ _id: postId });

@@ -25,7 +25,6 @@ const EditPost = ({ isOpen, onClose, post }) => {
     setTitle(post.title);
     setText(post.text);
     setImageUrl(post.image);
-    console.log(post.image);
   }, [isOpen]);
 
   const dispatch = useDispatch();

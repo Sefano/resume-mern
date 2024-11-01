@@ -88,7 +88,7 @@ export const refresh = async (refreshToken) => {
 };
 
 export const getProfile = async (id) => {
-  const user = await User.findOne({ _id: id });
+  const user = await User.findOne({ _id: id }).select("login _id avatar");
   const posts = await Post.find({ author: id });
 
   return { user, posts: posts };

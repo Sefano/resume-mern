@@ -7,6 +7,7 @@ import { logout } from "../../api/userApi";
 
 const Navbar = () => {
   const isAuth = useSelector((state) => state.user.isAuth);
+  const id = useSelector((state) => state.user.currentUser.id);
   const dispatch = useDispatch();
   return (
     <div className="navbar">
@@ -21,6 +22,9 @@ const Navbar = () => {
 
       {isAuth && (
         <div className="navbar__login">
+          <NavLink className="navbar__element-link" to={`/profile/${id}`}>
+            Профиль
+          </NavLink>
           <button
             className="navbar__element-logout"
             onClick={() => dispatch(logout())}
