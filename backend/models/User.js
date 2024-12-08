@@ -13,6 +13,13 @@ const User = new Schema({
       text: { type: String },
     },
   ],
+  commentedPosts: [
+    {
+      post: { type: Schema.Types.ObjectId, ref: "Post" },
+      text: { type: String },
+    },
+  ],
+  contacts: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 export default model("User", User);

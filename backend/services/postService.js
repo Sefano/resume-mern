@@ -63,6 +63,7 @@ export const getPosts = async (limit, skip) => {
 export const getPost = async (postId) => {
   const post = await Post.findOne({ _id: postId })
     .populate("author", "login")
+    .populate("comments.author", "avatar login")
     .exec();
 
   return post;
@@ -216,4 +217,28 @@ export const repostPost = async (postId, token, text) => {
   }
 
   return repostedPosts;
+};
+
+//комментарий поста
+
+export const commentPost = async (userId, comment, postId) => {
+  const post = await Post.findOne({ _id: postId });
+  await post.updateOne({
+    comments: [...post.comments, { author: userId, text: comment }],
+  });
+
+  const user = await User.findOne({ _id: userId });
+
+  await user.updateOne({
+    commentedPosts: [...user.commentedPosts, { post: postId, text: comment }],
+  });
+  return user.commentedPosts;
+};
+
+export const getComments = async (postId) => {
+  const post = await Post.findOne({ _id: postId });
+
+  const comments = post.comments;
+
+  return comments;
 };

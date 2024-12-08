@@ -32,6 +32,22 @@
       height: 250px;
       border-radius: 50%;
     }
+    &-online {
+      height: 40px;
+      width: 40px;
+      background-color: #328b0c;
+      border-radius: 50%;
+      display: inline-block;
+      position: absolute;
+      top: 70%;
+      left: 80%;
+    }
+  }
+  &-online {
+    background-color: green;
+    width: 100px;
+    height: 100px;
+    font-size: 70px;
   }
   &__name {
     font-size: 46px;

@@ -10,6 +10,12 @@ const Post = new Schema({
   likedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   reposts: { type: Number, default: 0 },
   repostedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  comments: [
+    {
+      author: { type: Schema.Types.ObjectId, ref: "User" },
+      text: { type: String },
+    },
+  ],
 });
 
 export default model("Post", Post);

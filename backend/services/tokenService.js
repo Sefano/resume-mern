@@ -4,7 +4,7 @@ import Token from "../models/Token.js";
 
 export const generateTokens = (payload) => {
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SERCET, {
-    expiresIn: "30m",
+    expiresIn: "60m",
   });
   const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SERCET, {
     expiresIn: "30d",

@@ -113,3 +113,24 @@ export const repost = (id, text) => {
     }
   };
 };
+
+export const sendComment = (id, comment) => {
+  return async (dispatch) => {
+    try {
+      await api.patch(`/comment/${id}`, { comment });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// export const fetchComments = (postId) => {
+//   return async (dispatch) => {
+//     try {
+//       const response = await api.patch(`/post/${postId}/comments`);
+//       return response.data;
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };

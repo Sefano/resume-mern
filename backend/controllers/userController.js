@@ -1,5 +1,6 @@
 import * as userService from "../services/userService.js";
 import * as tokenService from "../services/tokenService.js";
+import * as messageService from "../services/messageService.js";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
@@ -20,7 +21,8 @@ export const registration = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    //генерация и сохранения токенов
+    messageService.createImageFolder(userData.user.id);
+
     return res.json(userData);
   } catch (error) {
     console.log(error);
@@ -31,13 +33,15 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const userData = await userService.login(email, password);
+
     res.cookie("refreshToken", userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    return res.json(userData);
+    return res.status(200).json(userData);
   } catch (error) {
     console.log(error);
+    return res.status(error.status).json({ message: error.message });
   }
 };
 

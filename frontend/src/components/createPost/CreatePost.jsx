@@ -69,7 +69,9 @@ const CreatePost = ({ isOpen, onClose }) => {
                 type="file"
                 className="popup__input popup__file"
                 onChange={handleChangeFile}
+                accept="image/png, image/gif, image/jpeg"
               />
+              <input type="file" name="image" />
               <input
                 type="text"
                 autoFocus={true}

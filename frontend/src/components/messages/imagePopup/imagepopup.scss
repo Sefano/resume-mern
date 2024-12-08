@@ -1,0 +1,46 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #000000, $alpha: 0.75);
+  overflow: hidden;
+  overflow-y: auto;
+  transition: opacity 0.3s;
+  z-index: 100;
+}
+.imagePopup {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 80%;
+  position: absolute;
+  margin: auto;
+  align-content: center;
+  align-content: center;
+  transition: width 3s ease-out 0.4s;
+  transition-timing-function: ease-out;
+  &-image {
+    // min-width: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    &-img {
+      max-width: 80%;
+    }
+  }
+}
+.close {
+  font-size: 46px;
+  color: gray;
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  cursor: pointer;
+  &:hover {
+    color: white;
+  }
+}

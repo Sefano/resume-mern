@@ -128,3 +128,29 @@ export const repostPost = async (req, res) => {
     console.log(error);
   }
 };
+
+//комментарий поста
+
+export const commentPost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const comment = req.body.comment;
+    const postId = req.params.id;
+    const comments = await postService.commentPost(userId, comment, postId);
+
+    return res.json(comments);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getComments = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const comments = await postService.getComments(postId);
+
+    return res.json(comments);
+  } catch (error) {
+    console.log(error);
+  }
+};

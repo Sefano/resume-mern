@@ -7,7 +7,7 @@ export const registerValidator = [
   }),
   body("email", "Неверный формат почты").isEmail(),
   body("password", "Пароль должен содержать от 8 до 30 символов").isLength({
-    min: 5,
+    min: 8,
     max: 30,
   }),
 ];
@@ -15,7 +15,14 @@ export const registerValidator = [
 export const loginValidator = [
   body("email", "Неверный формат почты").isEmail(),
   body("password", "Пароль должен содержать от 8 до 30 символов").isLength({
-    min: 5,
+    min: 8,
     max: 30,
+  }),
+];
+
+export const messageValidator = [
+  body("text", "Сообщение не может превышать 600 символов").isLength({
+    min: 1,
+    max: 600,
   }),
 ];

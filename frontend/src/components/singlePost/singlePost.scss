@@ -41,3 +41,67 @@
     }
   }
 }
+
+.commentSection {
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 30px 20px;
+  width: 900px;
+  &__wrapper {
+    &-input {
+      border: 1px solid black;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      padding: 5px 10px;
+      align-items: center;
+      textarea {
+        width: 800px;
+        min-height: 100px;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        padding: 5px;
+        resize: none;
+        border: none;
+        outline: none;
+      }
+
+      button {
+        margin: 10px;
+        width: 200px;
+        font-size: 14px;
+        padding: 6px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        background-color: #4a42e788;
+      }
+    }
+  }
+  &__comment {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    &-wrapper {
+      margin-bottom: 30px;
+    }
+    &-profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      &-avatar {
+        width: 5%;
+        border-radius: 50%;
+      }
+      &-nickname {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+.navlink {
+  text-decoration: none;
+  color: black;
+}

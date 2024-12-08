@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./profile.scss";
-import avatar from "./213.jpg";
+import blank from "../../img/avatar-blank.png";
 import upload from "../../icons/upload-avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../axios/axios";
 import Post from "../posts/post/Post";
 import { hideLoader, showLoader } from "../../redux/reducers/loaderReducer";
@@ -17,6 +17,8 @@ const Profile = () => {
 
   const inputAvatarRef = useRef(null);
 
+  const [avatar, setAvatar] = useState("");
+
   const [likesPage, setLikesPage] = useState(1);
   const [postsPage, setPostsPage] = useState(1);
   const [repostPage, setRepostPage] = useState(1);
@@ -24,8 +26,6 @@ const Profile = () => {
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [hasMoreReposts, setHasMoreReposts] = useState(true);
   const [hasMoreLikes, setHasMoreLikes] = useState(true);
-
-  // const [hasMore, setHasMore] = useState(true);
 
   const [info, setInfo] = useState({});
   const [tab, setTab] = useState("posts");
@@ -36,6 +36,8 @@ const Profile = () => {
   // const posts = useSelector((state) => state.posts.posts);
   const loader = useSelector((state) => state.loader.loader);
 
+  const navigate = useNavigate();
+
   //эффект для первичного рендера и загрузки данных профиля
   useEffect(() => {
     dispatch(showLoader());
@@ -43,6 +45,8 @@ const Profile = () => {
       .get(`/profile/${id}`)
       .then((res) => {
         setInfo(res.data);
+        setAvatar(res.data.user.avatar);
+
         console.log(res.data);
       })
       .catch((error) => {
@@ -51,7 +55,7 @@ const Profile = () => {
       .finally(() => {
         dispatch(hideLoader());
       });
-  }, []);
+  }, [id]);
 
   //получение постов
   const fetchDataPosts = () => {
@@ -146,6 +150,18 @@ const Profile = () => {
     }
   }, [tab]);
 
+  const handleChangeFile = async (e) => {
+    try {
+      const formData = new FormData();
+      const file = e.target.files[0];
+      formData.append("image", file);
+      const response = await dispatch(uploadAvatar(formData));
+      setAvatar(response.data.avatarUrl);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loader) {
     return (
       <div className="loader">
@@ -153,17 +169,6 @@ const Profile = () => {
       </div>
     );
   }
-
-  const handleChangeFile = async (e) => {
-    try {
-      const formData = new FormData();
-      const file = e.target.files[0];
-      formData.append("image", file);
-      const response = await dispatch(uploadAvatar(formData));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <div className="profile">
@@ -173,14 +178,18 @@ const Profile = () => {
           onClick={() => inputAvatarRef.current.click()}
         >
           <img src={upload} alt="upload" className="profile__image-upload" />
-
-          {info.user && (
+          {avatar ? (
             <img
-              src={`http://localhost:1803/upload/profile-photos/${info.user.avatar}`}
+              src={`http://localhost:1803/upload/profile-photos/${avatar}`}
               alt="avatar"
               className="profile__image-avatar"
             />
+          ) : (
+            <img src={blank} alt="avatar" className="profile__image-avatar" />
           )}
+          {/* {onlineUsers.includes(id) && (
+            <span className="profile__image-online"></span>
+          )} */}
         </div>
         <input
           ref={inputAvatarRef}

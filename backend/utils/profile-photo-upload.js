@@ -5,7 +5,10 @@ const storage = multer.diskStorage({
     return cb(null, "./uploads/profile-photos");
   },
   filename: (req, file, cb) => {
-    return cb(null, req.user.id + file.originalname);
+    return cb(
+      null,
+      Buffer.from(req.user.id + file.originalname, "latin1").toString()
+    );
   },
 });
 

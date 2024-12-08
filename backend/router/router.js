@@ -6,6 +6,10 @@ import checkAuth from "../middlewares/checkAuth.js";
 import uploadPostImage from "../utils/post-photo-upload.js";
 import uploadProfilePhoto from "../utils/profile-photo-upload.js";
 import User from "../models/User.js";
+import path from "path";
+import fs from "fs";
+import ext from "../utils/image-message-upload.js";
+import createFolder from "../middlewares/createFolder.js";
 
 const router = new Router();
 
@@ -31,6 +35,7 @@ router.get("/post/:id", postController.getPost);
 router.get("/post/:id/posts", checkAuth, postController.getUserPosts);
 router.get("/post/:id/likes", checkAuth, postController.getLiked);
 router.get("/post/:id/reposts", checkAuth, postController.getReposted);
+router.get("/post/:id/comments", checkAuth, postController.getComments);
 
 router.post(
   "/upload",
@@ -51,6 +56,8 @@ router.post(
 router.patch("/like/:id", checkAuth, postController.likePost);
 router.patch("/repost/:id", checkAuth, postController.repostPost);
 
+router.patch("/comment/:id", checkAuth, postController.commentPost);
+
 router.post(
   "/avatar",
   checkAuth,
@@ -59,7 +66,7 @@ router.post(
     try {
       const avatar = req.file.filename;
       await User.findOneAndUpdate({ _id: req.user.id }, { avatar: avatar });
-      res.json({ avatarUrl: `upload/profile-photos/${req.file.filename}` });
+      res.json({ avatarUrl: `${req.file.filename}` });
     } catch (error) {
       console.log(error);
     }

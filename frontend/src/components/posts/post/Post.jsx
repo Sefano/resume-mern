@@ -15,6 +15,8 @@ const Post = ({ post }) => {
   const user = useSelector((state) => state.user.currentUser);
   const repostModal = useSelector((state) => state.app.modal);
 
+  // const [liked, setLiked] = useState(false);
+
   return (
     <div className="post">
       <NavLink className="post__author" to={`/profile/${post.author._id}`}>
