@@ -1,8 +1,16 @@
+import { validationResult } from "express-validator";
 import * as postService from "../services/postService.js";
 
 //создание поста
 export const createPost = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Ошибка валидации",
+        errors: errors.array(),
+      });
+    }
     const { title, text, image } = req.body;
     const author = req.user.id;
 
@@ -118,6 +126,13 @@ export const likePost = async (req, res) => {
 //репост
 export const repostPost = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Ошибка валидации",
+        errors: errors.array(),
+      });
+    }
     const token = req.headers.authorization.split(" ")[1];
     const postId = req.params.id;
     const text = req.body.text;
@@ -133,6 +148,13 @@ export const repostPost = async (req, res) => {
 
 export const commentPost = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Ошибка валидации",
+        errors: errors.array(),
+      });
+    }
     const userId = req.user.id;
     const comment = req.body.comment;
     const postId = req.params.id;

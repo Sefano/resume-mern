@@ -27,7 +27,12 @@ router.get("/profile/:id", checkAuth, userController.getProfile);
 
 router.get("/refresh", userController.refresh);
 
-router.post("/posts", checkAuth, postController.createPost);
+router.post(
+  "/posts",
+  checkAuth,
+  reqValidator.postValidator,
+  postController.createPost
+);
 router.patch("/post/:id", checkAuth, postController.editPost);
 
 router.get("/posts", postController.getPosts);
@@ -54,9 +59,19 @@ router.post(
 );
 
 router.patch("/like/:id", checkAuth, postController.likePost);
-router.patch("/repost/:id", checkAuth, postController.repostPost);
+router.patch(
+  "/repost/:id",
+  checkAuth,
+  reqValidator.repostValidator,
+  postController.repostPost
+);
 
-router.patch("/comment/:id", checkAuth, postController.commentPost);
+router.patch(
+  "/comment/:id",
+  checkAuth,
+  reqValidator.commentValidator,
+  postController.commentPost
+);
 
 router.post(
   "/avatar",

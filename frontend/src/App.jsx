@@ -21,7 +21,6 @@ function App() {
   const userId = useSelector((state) => state.user.currentUser.id);
   const dispatch = useDispatch();
 
-  // const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
@@ -33,54 +32,6 @@ function App() {
       socket.disconnect();
     };
   }, [user]);
-
-  // console.log("render");
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-  //   socket.on("getOnlineUsers", (users) => setOnlineUsers(users));
-  // }, [socket]);
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-
-  //   socket.emit("getOnli", (users) => {
-  //     setOnlineUsers(users);
-  //   });
-  // }, [socket]);
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-
-  //   socket.on("getOnlineUsers", (users) => {
-  //     setOnlineUsers(users);
-  //   });
-  // }, [socket]);
-
-  // useEffect(() => {
-  //   if (isAuth) {
-  //     const newSocket = io("http://localhost:1803", {
-  //       withCredentials: true,
-  //       query: {
-  //         userId: user.id,
-  //       },
-  //     });
-  //     setSocket(newSocket);
-
-  //     return () => {
-  //       newSocket.disconnect();
-  //     };
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-  //   // socket.emit("addNewUser", user?.id);
-  //   socket.on("getOnlineUsers", (users) => {
-  //     setOnlineUsers(users);
-  //   });
-  //   console.log(socket);
-  // }, [socket]);
 
   useEffect(() => {
     dispatch(fetchAuth());

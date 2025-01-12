@@ -75,6 +75,7 @@ export const auth = async (req, res) => {
         login: user.login,
         email: user.email,
         likedPosts: user.likedPosts,
+        avatar: user.avatar,
       },
     });
   } catch (error) {

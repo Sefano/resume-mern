@@ -66,6 +66,7 @@ const RepostModal = ({ repostModal }) => {
                 className="edit__popup__button"
                 onClick={() => {
                   dispatch(repost(postForRepost._id, text));
+                  onClose();
                 }}
               >
                 Опубликовать

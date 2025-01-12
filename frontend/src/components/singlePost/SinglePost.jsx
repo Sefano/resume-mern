@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideLoader, showLoader } from "../../redux/reducers/loaderReducer";
 import avatar from "../../img/avatar-blank.png";
 import { sendComment } from "../../api/postApi";
+import { addComment, getComments } from "../../redux/reducers/commentsReducer";
 
 const SinglePost = () => {
   const dispatch = useDispatch();
@@ -18,13 +19,16 @@ const SinglePost = () => {
 
   const [post, setPost] = useState({});
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
+  // const [comments, setComments] = useState([]);
+
+  const commentsState = useSelector((state) => state.comments.comments);
 
   const loader = useSelector((state) => state.loader.loader);
   const user = useSelector((state) => state.user.currentUser);
 
   const handleCommentSend = () => {
-    dispatch(sendComment(id, comment));
+    dispatch(sendComment(id, comment, user));
+    setComment("");
   };
 
   useEffect(() => {
@@ -33,7 +37,9 @@ const SinglePost = () => {
       .get(`http://localhost:1803/api/post/${id}`)
       .then((res) => {
         setPost(res.data);
-        setComments(res.data.comments);
+        // setComments(res.data.comments);
+        dispatch(getComments(res.data.comments));
+
         console.log(res.data.comments);
       })
 
@@ -76,29 +82,20 @@ const SinglePost = () => {
           ) : (
             <></>
           )}
-          {/* <div
-            className="singlePost__edit"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            <img src={editIcon} alt="editIcon" />
-          </div> */}
+
           <NavLink
             className="singlePost__author"
             to={`/profile/${post.author && post.author._id}`}
           >
             {post.author && post.author.login}
           </NavLink>
-          {/* <div className="singlePost__author">
-            {post.author && post.author.login}
-          </div> */}
         </div>
       </div>
       <div className="commentSection">
         <div className="commentSection__wrapper">
           <div className="commentSection__wrapper-input">
             <textarea
+              value={comment}
               maxLength={400}
               name="commetarea"
               id="commetarea"
@@ -108,7 +105,7 @@ const SinglePost = () => {
           </div>
           <hr />
           <div className="commentSection__comment">
-            {comments.map((comment, index) => (
+            {commentsState.map((comment, index) => (
               <div key={index} className="commentSection__comment-wrapper">
                 <div className="commentSection__comment-profile">
                   <img

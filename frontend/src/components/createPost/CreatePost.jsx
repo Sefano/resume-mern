@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { createPost, getPosts, uploadPostImage } from "../../api/postApi";
 import SimpleMDE from "react-simplemde-editor";
 import "./easymdeStyles.css";
-import TextField from "@mui/material/TextField";
 
 const CreatePost = ({ isOpen, onClose }) => {
   const [imageUrl, setImageUrl] = useState("");
@@ -23,7 +22,6 @@ const CreatePost = ({ isOpen, onClose }) => {
       const response = await dispatch(uploadPostImage(formData));
 
       setImageUrl(response.data.url);
-      console.log(imageUrl);
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +40,6 @@ const CreatePost = ({ isOpen, onClose }) => {
 
   const onTextAreaChange = useCallback((value) => {
     setText(value);
-    console.log(text);
   }, []);
 
   return (
@@ -71,13 +68,14 @@ const CreatePost = ({ isOpen, onClose }) => {
                 onChange={handleChangeFile}
                 accept="image/png, image/gif, image/jpeg"
               />
-              <input type="file" name="image" />
+
               <input
                 type="text"
                 autoFocus={true}
                 className="popup__input popup__title"
                 placeholder="Заголовок"
-                maxLength={100}
+                minLength={3}
+                maxLength={50}
                 onChange={(e) => setTitle(e.target.value)}
               />
 

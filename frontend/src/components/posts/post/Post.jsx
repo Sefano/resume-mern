@@ -15,7 +15,23 @@ const Post = ({ post }) => {
   const user = useSelector((state) => state.user.currentUser);
   const repostModal = useSelector((state) => state.app.modal);
 
-  // const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(post.likes);
+  const [liked, setLiked] = useState(post.likedBy.includes(user.id));
+
+  const [reposts, setReposts] = useState(post.reposts);
+
+  const [animation, setAnimation] = useState("");
+
+  const setLike = () => {
+    dispatch(fetchLike(post._id));
+    if (liked) {
+      setLikes(likes - 1);
+      setLiked(false);
+    } else {
+      setLikes(likes + 1);
+      setLiked(true);
+    }
+  };
 
   return (
     <div className="post">
@@ -32,10 +48,10 @@ const Post = ({ post }) => {
       </NavLink>
       <p className="post__divider"></p>
       <ReactMarkdown children={post.text} className="post__text" />
-      {/* <div className="post__text">{post.text}</div> */}
+
       <div className="post__bar">
         <div className="post__bar-reposts">
-          <div>{post.reposts}</div>
+          <div>{reposts}</div>
           <div
             onClick={() => {
               dispatch(showModal(post));
@@ -52,23 +68,19 @@ const Post = ({ post }) => {
         </div>
 
         <div className="post__bar-likes">
-          <div>{post.likes}</div>
+          <div>{likes}</div>
           <div
             onClick={() => {
-              dispatch(fetchLike(post._id));
+              setLike();
             }}
           >
             <img
-              className={post.likedBy.includes(user.id) ? "post__like-red" : ""}
+              className={liked ? "post__like-red" : ""}
               src={like}
               alt="like"
             />
           </div>
         </div>
-
-        {/* <NavLink className="post__author" to={`/profile/${post.author._id}`}>
-          {post.author.login}
-        </NavLink> */}
       </div>
     </div>
   );

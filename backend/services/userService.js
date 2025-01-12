@@ -54,7 +54,12 @@ export const login = async (email, password) => {
 
   return {
     ...tokens,
-    user: { id: user._id, nickname: user.login, likedPosts: user.likedPosts },
+    user: {
+      id: user._id,
+      nickname: user.login,
+      likedPosts: user.likedPosts,
+      avatar: user.avatar,
+    },
   };
 };
 

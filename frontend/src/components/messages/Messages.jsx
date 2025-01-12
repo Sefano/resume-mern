@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./messages.scss";
-import { useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../axios/axios";
 import { io } from "socket.io-client";
@@ -15,37 +15,7 @@ const Messages = ({ socket }) => {
 
   const { id } = useParams();
 
-  const isAuth = useSelector((state) => state.user.isAuth);
-  const user = useSelector((state) => state.user.currentUser);
-
   const messageScrollRef = useRef(null);
-
-  // const [socket, setSocket] = useState(null);
-
-  // useEffect(() => {
-  //   if (isAuth) {
-  //     const newSocket = io("http://localhost:1803", {
-  //       withCredentials: true,
-  //       query: {
-  //         userId: user.id,
-  //       },
-  //     });
-  //     setSocket(newSocket);
-
-  //     return () => {
-  //       newSocket.disconnect();
-  //     };
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-  //   // socket.emit("addNewUser", user?.id);
-  //   socket.on("getOnlineUsers", (users) => {
-  //     // setOnlineUsers(users);
-  //   });
-  //   console.log(socket);
-  // }, [socket]);
 
   const [avatar, setAvatar] = useState("");
   const [info, setInfo] = useState({});
@@ -72,6 +42,7 @@ const Messages = ({ socket }) => {
 
   const getContacts = async () => {
     const response = await api.get("messages/contacts");
+
     setContacts(response.data.contacts);
   };
 
@@ -79,10 +50,6 @@ const Messages = ({ socket }) => {
     getMessages();
     getContacts();
     console.log(socket);
-    // handleMessages();
-    // return () => {
-    //   unsubscribeMessages();
-    // };
   }, [id]);
 
   useEffect(() => {
@@ -134,8 +101,6 @@ const Messages = ({ socket }) => {
       console.log(response.data);
       setMessages([...messages, response.data]);
       setText("");
-
-      // dispatch(sendMessage(id, text, formData));
     } catch (error) {
       console.log(error);
     }
@@ -153,6 +118,7 @@ const Messages = ({ socket }) => {
     }
 
     socket.on("newMessage", (message) => {
+      if (message.sender._id !== id) return;
       setMessages([...messages, message]);
       console.log(message);
     });
@@ -166,7 +132,11 @@ const Messages = ({ socket }) => {
     <div className="messages">
       <div className="messages__contacts">
         {contacts.map((contact, index) => (
-          <div className="message__contacts-contact" key={index}>
+          <NavLink
+            className="message__contacts-contact"
+            key={index}
+            to={`/messages/${contact._id}`}
+          >
             <img
               className="message__contacts-contact-img"
               src={`http://localhost:1803/upload/profile-photos/${contact.avatar}`}
@@ -175,7 +145,7 @@ const Messages = ({ socket }) => {
             <div className="message__contacts-contact-name">
               {contact.login}
             </div>
-          </div>
+          </NavLink>
         ))}
       </div>
       <div className="messages__window">
@@ -187,16 +157,16 @@ const Messages = ({ socket }) => {
           />
           <div>{info.user && info.user.login}</div>
         </div>
-        <span></span>
+        <span className="messages__window-divider"></span>
         <div className="messages__window-messages">
           {messages.map((message) => (
             <div
-              className={"messages__window-messages_single"}
+              className={
+                message.sender._id === id
+                  ? "messages__window-messages_single recieve"
+                  : "messages__window-messages_single send"
+              }
               key={message._id}
-              style={{
-                alignSelf:
-                  message.sender._id === id ? "flex-start" : "flex-end",
-              }}
               ref={messageScrollRef}
             >
               {/* <div
@@ -216,7 +186,6 @@ const Messages = ({ socket }) => {
                     alt="msgImg"
                     onClick={() => handlePopup(message.image)}
                   />
-                  {/* <div>{message.text}</div> */}
                 </div>
               )}
               <div
@@ -227,12 +196,11 @@ const Messages = ({ socket }) => {
               >
                 {message.text}
               </div>
-              {/* {message?.image && <img src={} alt="msg" />} */}
             </div>
           ))}
         </div>
 
-        <span></span>
+        <span className="messages__window-divider"></span>
         <div className="messages__window-input">
           <textarea
             className="messages__window-input-textarea"

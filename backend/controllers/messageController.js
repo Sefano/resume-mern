@@ -1,9 +1,9 @@
 import User from "../models/User.js";
 import Message from "../models/Message.js";
 import * as messageService from "../services/messageService.js";
-import uploadMessageImage from "../utils/image-message-upload.js";
 import { io } from "../index.js";
 import { getRecievetSocketId } from "../index.js";
+import ApiError from "../helpers/apiError.js";
 
 export const getContacts = async (req, res) => {
   try {
@@ -24,7 +24,8 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user.id;
     const path = req.messageImgFolder;
     if (!req.file && !text) {
-      return res.status(204).json({ message: "Отсутствует контент" });
+      throw ApiError.BadRequest("Отсутствует контент");
+      // return res.status(204).json({ message: "Отсутствует контент" });
     }
     if (req.file) {
       imageUrl = `upload/${path}/${req.file.filename}`;
@@ -43,8 +44,16 @@ export const sendMessage = async (req, res) => {
       select: "_id avatar login",
     });
     await message.save();
-    await User.findOneAndUpdate({ _id: senderId }, { contacts: recieverId });
-    await User.findOneAndUpdate({ _id: recieverId }, { contacts: senderId });
+
+    const sender = await User.findOne({ _id: senderId });
+    const reciever = await User.findOne({ _id: recieverId });
+    if (!sender.contacts.includes(recieverId)) {
+      await sender.updateOne({ contacts: [...sender.contacts, recieverId] });
+      await reciever.updateOne({ contacts: [...reciever.contacts, senderId] });
+    }
+
+    // await User.findOneAndUpdate({ _id: senderId }, { contacts: recieverId });
+    // await User.findOneAndUpdate({ _id: recieverId }, { contacts: senderId });
 
     const recieverSocketId = getRecievetSocketId(recieverId);
     if (recieverSocketId) {

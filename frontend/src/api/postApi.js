@@ -2,6 +2,7 @@ import axios from "axios";
 import api from "../axios/axios";
 import { addPost, setPosts, singlePost } from "../redux/reducers/postReducer";
 import { hideLoader, showLoader } from "../redux/reducers/loaderReducer";
+import { addComment } from "../redux/reducers/commentsReducer";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -43,7 +44,7 @@ export const createPost = (image, title, text) => {
         title,
         text,
       });
-      dispatch(addPost(response.data));
+
       console.log("Пост успешно создан");
     } catch (error) {
       console.log(error);
@@ -114,10 +115,21 @@ export const repost = (id, text) => {
   };
 };
 
-export const sendComment = (id, comment) => {
+export const sendComment = (id, comment, user) => {
   return async (dispatch) => {
     try {
-      await api.patch(`/comment/${id}`, { comment });
+      await api.patch(`/comment/${id}`, {
+        comment,
+      });
+      const newComm = {
+        author: {
+          avatar: user.avatar,
+          login: user.login,
+        },
+        text: comment,
+      };
+      console.log(user);
+      dispatch(addComment(newComm));
     } catch (error) {
       console.log(error);
     }
